@@ -37,7 +37,7 @@ class Board():
               else:
                   i=i+1
                   if i ==3:
-                      # print(f" full board")
+                       print(f" full board")
                        return False
     def winner(self, position, letter):
          row_ind = math.floor(int(position )/ 3)
@@ -101,6 +101,12 @@ class ComputerPlayer(Player):
              return str(position)
 
 
+class smartComputer(Player):
+    def __init__(self,letter):
+        super().__init__(letter)
+
+    def position(self):
+        position = minimax
 
 
         
@@ -144,6 +150,5 @@ while not winner  and game.availablePosition() :
                 winner = True
     
     time.sleep(.8)         
-if not o and not x and  not game.availablePosition():
-     print("it is a tie")
+
 
