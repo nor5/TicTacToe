@@ -19,26 +19,31 @@ class Board():
                     row[row.index(val)] = letter
 ##                    print( f" {letter } has choose  { position}   row[] {row[row.index(position)]}")
 
-    def  validPosition(self, position):
-          if  position in  [str(i) for i in range(9)]:
-              if  position in self.board[0] or position in self.board[1] or position in self.board[2]:
-                   return True
-              else:
-##                  print(f" Invalid position. Try again.")
-                  return False
-          else:
-##                    print(f" Invalid position. Try again.")
-                    return False
+    
     def   availablePosition(self):
-          i=0
-          for row in self.board :
-              if  any (t in [str(i) for i in range(9)] for t in row):
-                  return True
-              else:
-                  i=i+1
-                  if i ==3:
-                      # print(f" full board")
-                       return False
+        positionList=[]
+        for row in self.board :
+            for P in row:
+                
+              if  P in [str(i) for i in range(9)]:
+                  #print(f' t is :{t}  and g is: {g}' )
+                  positionList.append(P)
+          
+        if len(positionList) == 0:
+            return False
+        else:
+            return {'availabe position':positionList, 'num_empty_squar' : len(positionList)}
+         
+    
+    def  validPosition(self, position):
+           
+            if position in self.availablePosition()['availabe position']:
+                return True
+            else:
+                return False
+            
+   
+
     def winner(self, position, letter):
          row_ind = math.floor(int(position )/ 3)
          row = self.board[row_ind]
@@ -76,27 +81,28 @@ class HumanPlayer(Player):
     def __init__(self, letter):
         super().__init__(letter)
 
-    def position(self ):
+    def position(self, game ):
         valid_position = True
        
         while  valid_position:
             position = input(self.letter + '\' s turn. Choose a position in (0, 8)')
             try:
 
-                if position not in [str(i) for i in range(9)]:
+                if position not in game.availablePosition()['availabe position']:
                     raise ValueError
                 valid_position = False
 
             except ValueError:
                 print('Invalid position. Try again.')
+            
         return position
                 
 class ComputerPlayer(Player):                    
          def __init__(self,letter):
              super().__init__(letter)
 
-         def  position(self):
-             position = random.choice(range(9))
+         def  position(self, game):
+             position = random.choice(game.availablePosition()['availabe position'])
             
              return str(position)
 
@@ -114,13 +120,8 @@ print('Start the Tic Tac Toe game')
 game.printBoard()
 
 def play(player, game):
-        position = player.position()
-        while  game.validPosition(position) == False:
-                    print(f" {player.letter} choose{position};Invalid position.try again <3")
-                    position = player.position()
-                    
-        else:
-        
+            position = player.position(game)
+
             game.insertLetter(position, player.letter)
             print(f" #####  {player.letter}  choose: <{position}>#######")
             game.printBoard()
@@ -131,6 +132,7 @@ def play(player, game):
                 
 
 while not winner  and game.availablePosition() :
+   
     if  player == o_player:
         player = x_player
         x = play(player, game)
