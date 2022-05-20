@@ -48,11 +48,11 @@ class Board():
          row_ind = math.floor(int(position )/ 3)
          row = self.board[row_ind]
          if all([s == letter for s in row]):
-            return True
+            return letter
          col_ind = int(position) % 3
          column = [row[col_ind ]  for row in self.board]     
          if all([s == letter for s in column]):
-            return True
+            return letter
          diagonal1=[]
          diagonal2=[]
          i=0
@@ -63,9 +63,9 @@ class Board():
               i=i+1
               j=j-1
          if all([s == letter for s in diagonal1]):
-            return True
+            return letter
          if all([s == letter for s in diagonal2]):
-            return True
+            return letter
          
          return False
 ###player section########
@@ -125,8 +125,9 @@ def play(player, game):
             game.insertLetter(position, player.letter)
             print(f" #####  {player.letter}  choose: <{position}>#######")
             game.printBoard()
-            if game.winner(position, player.letter) :
+            if game.winner(position, player.letter) ==  player.letter:
                 print(f"{player.letter} wins")
+                
                 return True
                 
                 
@@ -136,16 +137,16 @@ while not winner  and game.availablePosition() :
     if  player == o_player:
         player = x_player
         x = play(player, game)
-        if x  :
-                winner = True
+        if x:
+            winner = True
     else:
         
         player =o_player
         o = play(player, game)
-        if o  :
-                winner = True
-    
+        if o:
+            winner = True
+       
     time.sleep(.8)         
-if not o and not x and  not game.availablePosition():
+if  winner == False and  not game.availablePosition():
      print("it is a tie")
 
