@@ -1,3 +1,4 @@
+#Tic TAc Toe AI game using a minimax algorithme, smart computer win or tie but never lose
 import math
 import time
 import random
@@ -35,8 +36,6 @@ class Board():
 
 
         
-## print( f" {letter } has choose  { position}   row[] {row[row.index(position)]}")
-
     
     def   availablePosition(self):
         positionList=[]
@@ -44,7 +43,7 @@ class Board():
             for P in row:
                 
               if  P in [str(i) for i in range(9)]:
-                  #print(f' t is :{t}  and g is: {g}' )
+                
                   
                   positionList.append(P)
           
@@ -143,10 +142,12 @@ class smartComputer(Player):
         max_player = self.letter #computer player
         other_player = "O" if player == "X" else "X"
         #chek for every move if there is a winner
-        if board.current_winner  == other_player:
+        if board.current_winner  == other_player and board.availablePosition() :
+            #defin score with the empty square in state
             return {'position':None, 'score':1*(game.availablePosition()['num_empty_squar'] + 1 ) if other_player == max_player
                         else   -1*(board.availablePosition()['num_empty_squar'] +1)}
-        if  not  board.availablePosition()['num_empty_squar']  :
+         #check if the board is full      
+        elif  not board.availablePosition():
             return{'position':None, 'score':0}
 
         if player == max_player:
@@ -155,18 +156,18 @@ class smartComputer(Player):
             best = {'position':None, 'score': math.inf}
         for possible_move in board.availablePosition()['availabe position']:
             board.insertLetter(possible_move, player)
-            simulate = self.minimax(board, other_player)
+            simulate = self.minimax(board, other_player)#simulate the game
             board.undomove(possible_move) # undo the move by replacing the letter by the position number
             board.current_winner = None
             simulate['position'] = possible_move
             if player == max_player:
-              if simulate['score'] > best['score']:
+              if simulate['score'] > best['score']: #maximising the max palyer
                   best = simulate
             else:
-               if  simulate['score'] < best['score']:
+               if  simulate['score'] < best['score']: #minimising the other
                     best = simulate
 
-            return best
+        return best
         
 
 
